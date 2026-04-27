@@ -1,0 +1,18 @@
+.navbar {
+    display: flex;
+    height: 4rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 1rem;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 0.25rem;
+}
+
+.navbar a {
+    color: black;
+    padding: 0.5rem 1rem;
+}
