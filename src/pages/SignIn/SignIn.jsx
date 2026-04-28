@@ -11,11 +11,11 @@ function SignIn() {
 
     return (
         <div>
-            <form onsubmit={handleSignIn}>
-                <label for="email">이메일</label>
+            <form onSubmit={handleSignIn}>
+                <label htmlFor="email">이메일</label>
                 <input type="email" id="email" name="email" required />
 
-                <label for="password">비밀번호</label>
+                <label htmlFor="password">비밀번호</label>
                 <input type="password" id="password" name="password" required />
 
                 <button type="submit">로그인</button>

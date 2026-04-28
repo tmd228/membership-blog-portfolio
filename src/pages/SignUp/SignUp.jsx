@@ -4,6 +4,7 @@ import styles from './SignUp.module.css'
 import { auth } from '../../firebaseConfig/firebase';
 import { Link } from 'react-router-dom'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { updateProfile } from 'firebase/auth';
 
 function SignUp() {
 
