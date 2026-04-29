@@ -24,5 +24,3 @@ dist-ssr
 *.sw?
 
 firebaseConfig.js
-
-Test/
