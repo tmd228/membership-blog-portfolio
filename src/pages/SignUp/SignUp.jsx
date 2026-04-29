@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import styles from './SignUp.module.css'
-import { auth } from '../../firebaseConfig/firebase';
+import { auth, db } from '../../firebaseConfig/firebase';
 import { Link } from 'react-router-dom'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { updateProfile } from 'firebase/auth';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 function SignUp() {
 
@@ -24,6 +25,15 @@ function SignUp() {
             await updateProfile(userCredential.user, {
                 displayName: nickname,
             });
+
+            const userRef = doc(db, 'users', userCredential.user.uid)
+            const userData = await setDoc(userRef, {
+                email,
+                createdAt: serverTimestamp(),
+                uid: userCredential.user.uid,
+                nickname
+            })
+
             navigate('/')
         } catch (err) {
             console.log(err)
@@ -43,12 +53,12 @@ function SignUp() {
                     required />
 
                 <label htmlFor="email">이메일</label>
-                <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
                 <label htmlFor="password">비밀번호</label>
-                <input type="password" id="password" name="password" value={password} onChange={e => setPassword(e.target.value)} required />
+                <input type="password" id="password" value={password} onChange={e => setPassword(e.target.value)} required />
 
-                <button type="submit">로그인</button>
+                <button type="submit">회원가입</button>
             </form>
             <Link to='/signIn'>로그인</Link>
         </div>
