@@ -6,8 +6,24 @@ import JoinGroup from "./pages/JoinGroup/JoinGroup"
 import CreateGroup from "./pages/CreateGroup/CreateGroup"
 import Test from "./pages/Test/Test"
 import { Routes, Route } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { onAuthStateChanged } from "firebase/auth"
+import { auth } from "./firebaseConfig/firebase"
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute"
 
 function App() {
+
+  const [user, setUser] = useState('')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+      setLoading(false)
+    })
+
+    return () => { unsubscribe() }
+  }, [])
 
   return <div>
     <Navbar />
@@ -15,8 +31,10 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/signIn" element={<SignIn />} />
       <Route path="/signUp" element={<SignUp />} />
-      <Route path="/joinGroup" element={<JoinGroup />} />
-      <Route path="/createGroup" element={<CreateGroup />} />
+      <Route element={<ProtectedRoute loading={loading} user={user} />}>
+        <Route path="/joinGroup" element={<JoinGroup />} />
+        <Route path="/createGroup" element={<CreateGroup />} />
+      </Route>
       <Route path="/test" element={<Test />} />
     </Routes>
   </div>
