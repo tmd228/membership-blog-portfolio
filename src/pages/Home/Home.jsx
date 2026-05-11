@@ -4,31 +4,34 @@ import { Link } from 'react-router-dom'
 import { auth } from '../../firebaseConfig/firebase'
 import styles from './Home.module.css'
 import { db } from '../../firebaseConfig/firebase'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { collection, documentId, getDocs, query, where } from 'firebase/firestore'
 
 function Home() {
 
   const [user, setUser] = useState('')
   const [groups, setGroups] = useState('')
-  const [groupNames, setGroupNames] = useState('')
+  const [groupNames, setGroupNames] = useState([])
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser)
-      
+
       if (currentUser) {
 
         try {
-          const membershipCollection = collection(db, 'membership')
-          const q = query(membershipCollection, where('member', '==', currentUser.uid))
+          const membershipRef = collection(db, 'membership')
+          const q = query(membershipRef, where('member', '==', currentUser.uid))
           const querySnapshot = await getDocs(q)
-          console.log(querySnapshot)
-          const userGroups = querySnapshot.docs.map(doc => doc.data())
+          const userGroups = querySnapshot.docs.map(doc => doc.data().groupId)
           setGroups(userGroups)
-          console.log(userGroups)
+
+          const groupCollectionRef = collection(db, 'groups')
+          const groupsQuery = query(groupCollectionRef, where(documentId(), 'in', userGroups))
+          const groupSnapshot = await getDocs(groupsQuery)
+          setGroupNames(groupSnapshot.docs.map(doc => doc.data().groupName))
 
           // groups.map(group => )
-        }catch (err) { 
+        } catch (err) {
           console.log(err)
         }
       }
@@ -47,14 +50,14 @@ function Home() {
       </div>
       <p>내 그룹들</p>
       <ul>
-            {groups.length > 0 ? (
-              groups.map((group, index) => (
-                <li key={index}>{group.groupId}</li>
-              ))
-            ) : (
-              <p>그룹이 없습니다.</p>
-            )}
-          </ul>
+        {groups.length > 0 ? (
+          groupNames.map((group, index) => (
+            <li key={index}>{group}</li>
+          ))
+        ) : (
+          <p>그룹이 없습니다.</p>
+        )}
+      </ul>
     </div>
     }
 
