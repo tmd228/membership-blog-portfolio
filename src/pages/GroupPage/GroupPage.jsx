@@ -3,12 +3,14 @@ import styles from './GroupPage.module.css'
 import { useParams, Navigate } from 'react-router-dom'
 import { auth, db } from '../../firebaseConfig/firebase'
 import { collection, getDocs, query, where } from 'firebase/firestore'
+import { Link } from 'react-router-dom'
 
 function GroupPage() {
 
     //보안security 해야될것: firebaseRules로 membership확인 후 가입 되어있는 id만 데이터 보내주기
 
     const [isMember, setIsMember] = useState(null)
+    const [posts, setPosts] = useState([])
     const { groupId } = useParams()
 
     useEffect(() => {
@@ -30,6 +32,35 @@ function GroupPage() {
 
     }, [groupId])
 
+    useEffect(() => {
+
+    async function fetchPosts() {
+
+        if (!isMember) return
+
+        try {
+            const collectionRef = collection(db, "posts")
+
+            const postsQ = query(
+                collectionRef,
+                where('groupId', '==', groupId)
+            )
+
+            const snapshot = await getDocs(postsQ)
+
+            setPosts(snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            })))
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    fetchPosts()
+
+}, [isMember, groupId])
 
 
     if (isMember === null) {
@@ -42,7 +73,10 @@ function GroupPage() {
 
     return (
         <div>
-            <h2>welcome</h2>
+            <Link className='primaryButton' to={`/group/${groupId}/newPost`}>new Post</Link>
+            {posts.map((post) => {
+                return <Link key={post.id}>{post.title}</Link>
+            })}
         </div>
     )
 }
