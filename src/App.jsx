@@ -5,6 +5,7 @@ import SignUp from "./pages/SignUp/SignUp"
 import JoinGroup from "./pages/JoinGroup/JoinGroup"
 import CreateGroup from "./pages/CreateGroup/CreateGroup"
 import Test from "./pages/Test/Test"
+import GroupPage from "./pages/GroupPage/GroupPage"
 import { Routes, Route } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { onAuthStateChanged } from "firebase/auth"
@@ -34,6 +35,7 @@ function App() {
       <Route element={<ProtectedRoute loading={loading} user={user} />}>
         <Route path="/joinGroup" element={<JoinGroup />} />
         <Route path="/createGroup" element={<CreateGroup />} />
+        <Route path="/group/:groupId" element={<GroupPage />} />
       </Route>
       <Route path="/test" element={<Test />} />
     </Routes>

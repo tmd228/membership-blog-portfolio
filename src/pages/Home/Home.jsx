@@ -28,9 +28,10 @@ function Home() {
           const groupCollectionRef = collection(db, 'groups')
           const groupsQuery = query(groupCollectionRef, where(documentId(), 'in', userGroups))
           const groupSnapshot = await getDocs(groupsQuery)
-          setGroupNames(groupSnapshot.docs.map(doc => doc.data().groupName))
-
-          // groups.map(group => )
+          setGroupNames(groupSnapshot.docs.map(doc => ({
+            groupId: doc.id,
+            ...doc.data()
+          })))
         } catch (err) {
           console.log(err)
         }
@@ -52,7 +53,7 @@ function Home() {
       <ul>
         {groups.length > 0 ? (
           groupNames.map((group, index) => (
-            <li key={index}>{group}</li>
+            <li key={index}><Link to={`group/${group.groupId}`}>{group.groupName}</Link></li>
           ))
         ) : (
           <p>그룹이 없습니다.</p>
