@@ -74,9 +74,13 @@ function GroupPage() {
     return (
         <div>
             <Link className='primaryButton' to={`/group/${groupId}/newPost`}>new Post</Link>
-            {posts.map((post) => {
-                return <Link key={post.id}>{post.title}</Link>
-            })}
+            {posts.length > 0 ? posts.map((post) => {
+                return <Link key={post.id} to='/'>
+                    <p>{post.title}</p>
+                    <p>{post.nickname ?? '사용자'}</p>
+                    </Link>
+            }) 
+            : <p>게시물이 없습니다</p>}
         </div>
     )
 }

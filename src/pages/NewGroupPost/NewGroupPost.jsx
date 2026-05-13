@@ -24,6 +24,7 @@ function NewGroupPost() {
             const postRef = await addDoc(collectionRef, {
                 groupId,
                 authorId: auth.currentUser.uid,
+                nickname: auth.currentUser.displayName,
                 title,
                 contents,
                 createdAt: serverTimestamp()
