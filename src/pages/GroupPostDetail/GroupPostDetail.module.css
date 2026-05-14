@@ -1,0 +1,14 @@
+.page {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 1000px;
+    margin-top: 40px;
+    background-color: rgb(196, 196, 196);
+}
+
+.container p {
+    font-size: 1.2rem;
+}

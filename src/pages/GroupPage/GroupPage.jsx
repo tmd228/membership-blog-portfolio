@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './GroupPage.module.css'
 import { useParams, Navigate } from 'react-router-dom'
 import { auth, db } from '../../firebaseConfig/firebase'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { collection, doc, documentId, getDoc, getDocs, query, where } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
 
 function GroupPage() {
@@ -16,51 +16,84 @@ function GroupPage() {
     useEffect(() => {
 
         async function fetchMembership() {
-            const membershipRef = collection(db, 'membership')
-            const membershipQ = query(
-                membershipRef,
-                where('member', '==', auth.currentUser.uid),
-                where('groupId', '==', groupId)
-            )
-            const membershipSnapshot = await getDocs(membershipQ)
+            try {
+                const membershipRef = collection(db, 'membership')
+                const membershipQ = query(
+                    membershipRef,
+                    where('member', '==', auth.currentUser.uid),
+                    where('groupId', '==', groupId)
+                )
+                const membershipSnapshot = await getDocs(membershipQ)
 
-            setIsMember(!membershipSnapshot.empty)
+                setIsMember(!membershipSnapshot.empty)
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        async function fetchJoinRequest() {
+
+            try {
+                const groupRef = doc(db, 'groups', groupId)
+
+                const snapshot = await getDoc(groupRef)
+
+                const groupData = snapshot.data()
+
+                if (groupData.ownerId === auth.currentUser.uid) {
+                    const requestRef = collection(db, 'joinRequests')
+
+                    const requestQ = query(
+                        requestRef,
+                        where('requestGroupId', '==', groupId)
+                    )
+
+                    const requestSnapshot = await getDocs(requestQ)
+
+                    console.log(requestSnapshot.docs)
+                }
+
+            } catch (err) {
+
+            }
         }
 
         fetchMembership()
+        fetchJoinRequest()
 
 
     }, [groupId])
 
     useEffect(() => {
 
-    async function fetchPosts() {
+        async function fetchPosts() {
 
-        if (!isMember) return
+            if (!isMember) return
 
-        try {
-            const collectionRef = collection(db, "posts")
+            try {
+                const collectionRef = collection(db, "posts")
 
-            const postsQ = query(
-                collectionRef,
-                where('groupId', '==', groupId)
-            )
+                const postsQ = query(
+                    collectionRef,
+                    where('groupId', '==', groupId)
+                )
 
-            const snapshot = await getDocs(postsQ)
+                const snapshot = await getDocs(postsQ)
 
-            setPosts(snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            })))
+                setPosts(snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                })))
 
-        } catch (err) {
-            console.log(err)
+            } catch (err) {
+                console.log(err)
+            }
         }
-    }
 
-    fetchPosts()
+        fetchPosts()
 
-}, [isMember, groupId])
+    }, [isMember, groupId])
 
 
     if (isMember === null) {
@@ -75,12 +108,12 @@ function GroupPage() {
         <div>
             <Link className='primaryButton' to={`/group/${groupId}/newPost`}>new Post</Link>
             {posts.length > 0 ? posts.map((post) => {
-                return <Link key={post.id} to='/'>
+                return <Link key={post.id} to={`/group/${groupId}/post/${post.id}`}>
                     <p>{post.title}</p>
                     <p>{post.nickname ?? '사용자'}</p>
-                    </Link>
-            }) 
-            : <p>게시물이 없습니다</p>}
+                </Link>
+            })
+                : <p>게시물이 없습니다</p>}
         </div>
     )
 }

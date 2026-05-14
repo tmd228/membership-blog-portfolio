@@ -7,6 +7,7 @@ import CreateGroup from "./pages/CreateGroup/CreateGroup"
 import Test from "./pages/Test/Test"
 import GroupPage from "./pages/GroupPage/GroupPage"
 import NewGroupPost from "./pages/NewGroupPost/NewGroupPost"
+import GroupPostDetail from "./pages/GroupPostDetail/GroupPostDetail"
 import { Routes, Route } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { onAuthStateChanged } from "firebase/auth"
@@ -38,6 +39,7 @@ function App() {
         <Route path="/createGroup" element={<CreateGroup />} />
         <Route path="/group/:groupId" element={<GroupPage />} />
         <Route path="/group/:groupId/newPost" element={<NewGroupPost />} />
+        <Route path="/group/:groupId/post/:postId" element={<GroupPostDetail />} />
       </Route>
       <Route path="/test" element={<Test />} />
     </Routes>
