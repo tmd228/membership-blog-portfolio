@@ -26,9 +26,11 @@ function CreateGroup() {
             })
 
             const membershipRef = collection(db, 'membership')
+            //memberNickname 필드는 이전 다큐먼트들에는 없으니까 lazymigration으로 처리하는거 고민해보기
             const membershipData = await addDoc(membershipRef, {
                 groupId: docData.id,
-                member: auth.currentUser.uid
+                member: auth.currentUser.uid,
+                memberNickname: auth.currentUser.displayName,
             })
 
             navigate('/')
