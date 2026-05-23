@@ -121,7 +121,7 @@ function GroupPage() {
             <div className={styles.membersList}>
                 <h2>회원 리스트</h2>
                 {memberList.map((member) => (
-                    <div key={member.id}>
+                    <div key={member.member}>
                         {member.memberNickname ??'사용자'}
                     </div>
                 ))}
