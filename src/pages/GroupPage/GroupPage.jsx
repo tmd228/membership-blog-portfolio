@@ -13,6 +13,8 @@ function GroupPage() {
     const [posts, setPosts] = useState([])
     const { groupId } = useParams()
     const [memberList, setMemberList] = useState([])
+    const [groupData, setGroupData] = useState([])
+    const [joinRequestList, setJoinRequestList] = useState([])
 
     useEffect(() => {
 
@@ -39,6 +41,7 @@ function GroupPage() {
                 const groupRef = doc(db, 'groups', groupId)
                 const snapshot = await getDoc(groupRef)
                 const groupData = snapshot.data()
+                setGroupData(groupData)
 
                 if (groupData.ownerId === auth.currentUser.uid) {
 
@@ -48,7 +51,10 @@ function GroupPage() {
                         where('requestGroupId', '==', groupId)
                     )
                     const requestSnapshot = await getDocs(requestQ)
-                    console.log(requestSnapshot.docs)
+                    setJoinRequestList(requestSnapshot.docs.map((doc) => {
+                        return doc.data()
+                    }))
+                    console.log('가입요청데이터 불러옴')
                 }
 
             } catch (err) {
@@ -57,6 +63,9 @@ function GroupPage() {
         }
 
         fetchMembership()
+
+                    console.log(groupData.ownerId)
+                    console.log(auth.currentUser.uid)
         fetchJoinRequest()
 
 
@@ -119,12 +128,18 @@ function GroupPage() {
         <div>
             <Link className='primaryButton' to={`/group/${groupId}/newPost`}>new Post</Link>
             <div className={styles.membersList}>
-                <h2>회원 리스트</h2>
+                <h2>회원 리스트, 회원수: {groupData.memberCount}</h2>
                 {memberList.map((member) => (
                     <div key={member.member}>
-                        {member.memberNickname ??'사용자'}
+                        {member.memberNickname ?? '사용자'}
                     </div>
                 ))}
+            </div>
+            <div>
+                <h2>가입요청</h2>
+                {joinRequestList.map(doc => {
+                    return <div>{doc.requestUserId}</div>
+                })}
             </div>
             <div className={styles.postsList}>
                 <h2>게시글</h2>

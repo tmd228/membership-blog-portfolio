@@ -22,7 +22,8 @@ function CreateGroup() {
                 description,
                 createdAt: serverTimestamp(),
                 ownerId: auth.currentUser.uid,
-                isPrivate: true
+                isPrivate: true,
+                memberCount: 1
             })
 
             const membershipRef = collection(db, 'membership')
