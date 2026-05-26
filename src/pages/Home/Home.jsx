@@ -25,6 +25,11 @@ function Home() {
           const userGroups = querySnapshot.docs.map(doc => doc.data().groupId)
           setGroups(userGroups)
 
+          if (userGroups.length === 0) {
+            setGroupNames([])
+            return
+          }
+
           const groupCollectionRef = collection(db, 'groups')
           const groupsQuery = query(groupCollectionRef, where(documentId(), 'in', userGroups))
           const groupSnapshot = await getDocs(groupsQuery)

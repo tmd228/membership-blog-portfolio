@@ -23,7 +23,7 @@ function CreateGroup() {
                 createdAt: serverTimestamp(),
                 ownerId: auth.currentUser.uid,
                 isPrivate: true,
-                memberCount: 1
+                memberCount: 1,
             })
 
             const membershipRef = collection(db, 'membership')
@@ -32,6 +32,7 @@ function CreateGroup() {
                 groupId: docData.id,
                 member: auth.currentUser.uid,
                 memberNickname: auth.currentUser.displayName,
+                joinedAt: serverTimestamp()
             })
 
             navigate('/')

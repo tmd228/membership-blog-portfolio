@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './GroupPage.module.css'
 import { useParams, Navigate } from 'react-router-dom'
 import { auth, db } from '../../firebaseConfig/firebase'
-import { collection, doc, documentId, getDoc, getDocs, query, where } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, documentId, getDoc, getDocs, increment, query, serverTimestamp, updateDoc, where } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
 
 function GroupPage() {
@@ -16,8 +16,8 @@ function GroupPage() {
     const [groupData, setGroupData] = useState(null)
     const [joinRequestList, setJoinRequestList] = useState([])
 
-    useEffect(() => {
 
+    useEffect(() => {
         async function fetchMembership() {
             try {
                 const membershipRef = collection(db, 'membership')
@@ -35,47 +35,67 @@ function GroupPage() {
             }
         }
 
-        async function fetchJoinRequest() {
+        fetchMembership()
+    }, [groupId])
 
+    useEffect(() => {
+
+        async function fetchGroupData() {
             try {
                 const groupRef = doc(db, 'groups', groupId)
                 const snapshot = await getDoc(groupRef)
-
-                if (!snapshot.exists()) return
-
                 const groupData = snapshot.data()
                 setGroupData(groupData)
-
-                if (groupData.ownerId === auth.currentUser.uid) {
-
-                    const requestRef = collection(db, 'joinRequests')
-                    const requestQ = query(
-                        requestRef,
-                        where('requestGroupId', '==', groupId)
-                    )
-                    const requestSnapshot = await getDocs(requestQ)
-                    setJoinRequestList(requestSnapshot.docs.map((doc) => {
-                        return doc.data()
-                    }))
-                    console.log('가입요청데이터 불러옴')
-                }
 
             } catch (err) {
                 console.log(err)
             }
         }
 
-        fetchMembership()
-        fetchJoinRequest()
-
-
+        fetchGroupData()
     }, [groupId])
 
     useEffect(() => {
 
-        async function fetchPosts() {
+        if (!groupData?.ownerId) return
+        if (groupData.ownerId !== auth.currentUser.uid) return
 
-            if (!isMember) return
+        async function fetchJoinRequest() {
+
+
+            try {
+
+
+
+                const requestRef = collection(db, 'groupJoinRequests')
+                const requestQ = query(
+                    requestRef,
+                    where('requestGroupId', '==', groupId)
+                )
+                const requestSnapshot = await getDocs(requestQ)
+                setJoinRequestList(requestSnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data()
+                })))
+                console.log('가입요청데이터 불러옴')
+
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        fetchJoinRequest()
+
+
+    }, [groupData, groupId])
+
+    useEffect(() => {
+
+        if (isMember === null) return
+        if (!isMember) return
+
+        async function fetchPosts() {
 
             try {
                 const collectionRef = collection(db, "posts")
@@ -97,16 +117,14 @@ function GroupPage() {
         }
 
         async function fetchMembers() {
-
-            if (!isMember) return
-
             try {
                 const membersCollectionRef = collection(db, 'membership')
                 const membersQ = query(membersCollectionRef, where('groupId', '==', groupId))
                 const membersSnapshot = await getDocs(membersQ)
-                setMemberList(membersSnapshot.docs.map((doc) => {
-                    return doc.data()
-                }))
+                setMemberList(membersSnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data()
+                })))
 
             } catch (err) {
 
@@ -127,24 +145,56 @@ function GroupPage() {
         return <Navigate to="/" />
     }
 
+    async function handleAcceptJoin(request) {
+
+        if (groupData.ownerId !== auth.currentUser.uid) return
+
+        try {
+            const membershipRef = collection(db, 'membership')
+            const membershipData = await addDoc(membershipRef, {
+                groupId: groupId,
+                member: request.requestUserId,
+                memberNickname: request.requestUserNickname,
+                joinedAt: serverTimestamp()
+            })
+
+            await updateDoc(doc(db, "groups", groupId), {
+                memberCount: increment(1)
+            })
+
+            await deleteDoc(doc(db, 'groupJoinRequests', request.id))
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <div>
             <Link className='primaryButton' to={`/group/${groupId}/newPost`}>new Post</Link>
             <div className={styles.membersList}>
                 <h2>회원 리스트, 회원수: {groupData?.memberCount}</h2>
                 {memberList.map((member) => (
-                    <div key={member.member}>
+                    <div key={member.id}>
                         {member.memberNickname ?? '사용자'}
                     </div>
                 ))}
             </div>
-            {groupData?.ownerId === auth.currentUser.uid && <div>
+            <div>
                 <h2>가입요청</h2>
                 {joinRequestList.map(doc => {
-                    return <div>{doc.requestUserId}</div>
+                    return <div className={styles.joinRequestCard} key={doc.requestUserId}>
+                        <div className={styles.joinRequestTexts}>
+                            <p>요청자: {doc.requestUserNickname}</p>
+                            <p>요청날짜: {doc.requestedAt?.toDate().toLocaleDateString()}</p>
+                        </div>
+                        <div className={styles.joinRequestButtons}>
+                            <button onClick={() => handleAcceptJoin(doc)} className={styles.accept}>수락하기</button>
+                            <button className={styles.reject}>거절하기</button>
+                        </div>
+                    </div>
                 })}
-            </div>}
-            
+            </div>
             <div className={styles.postsList}>
                 <h2>게시글</h2>
                 {posts.length > 0 ? posts.map((post) => {
