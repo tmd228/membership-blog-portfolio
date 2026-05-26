@@ -13,7 +13,7 @@ function GroupPage() {
     const [posts, setPosts] = useState([])
     const { groupId } = useParams()
     const [memberList, setMemberList] = useState([])
-    const [groupData, setGroupData] = useState([])
+    const [groupData, setGroupData] = useState(null)
     const [joinRequestList, setJoinRequestList] = useState([])
 
     useEffect(() => {
@@ -40,6 +40,9 @@ function GroupPage() {
             try {
                 const groupRef = doc(db, 'groups', groupId)
                 const snapshot = await getDoc(groupRef)
+
+                if (!snapshot.exists()) return
+
                 const groupData = snapshot.data()
                 setGroupData(groupData)
 
@@ -63,9 +66,6 @@ function GroupPage() {
         }
 
         fetchMembership()
-
-                    console.log(groupData.ownerId)
-                    console.log(auth.currentUser.uid)
         fetchJoinRequest()
 
 
@@ -97,6 +97,9 @@ function GroupPage() {
         }
 
         async function fetchMembers() {
+
+            if (!isMember) return
+
             try {
                 const membersCollectionRef = collection(db, 'membership')
                 const membersQ = query(membersCollectionRef, where('groupId', '==', groupId))
@@ -128,19 +131,20 @@ function GroupPage() {
         <div>
             <Link className='primaryButton' to={`/group/${groupId}/newPost`}>new Post</Link>
             <div className={styles.membersList}>
-                <h2>회원 리스트, 회원수: {groupData.memberCount}</h2>
+                <h2>회원 리스트, 회원수: {groupData?.memberCount}</h2>
                 {memberList.map((member) => (
                     <div key={member.member}>
                         {member.memberNickname ?? '사용자'}
                     </div>
                 ))}
             </div>
-            <div>
+            {groupData?.ownerId === auth.currentUser.uid && <div>
                 <h2>가입요청</h2>
                 {joinRequestList.map(doc => {
                     return <div>{doc.requestUserId}</div>
                 })}
-            </div>
+            </div>}
+            
             <div className={styles.postsList}>
                 <h2>게시글</h2>
                 {posts.length > 0 ? posts.map((post) => {

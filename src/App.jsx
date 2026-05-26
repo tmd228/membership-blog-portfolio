@@ -8,6 +8,7 @@ import Test from "./pages/Test/Test"
 import GroupPage from "./pages/GroupPage/GroupPage"
 import NewGroupPost from "./pages/NewGroupPost/NewGroupPost"
 import GroupPostDetail from "./pages/GroupPostDetail/GroupPostDetail"
+import GroupDashboard from "./pages/GroupDashboard/GroupDashboard"
 import { Routes, Route } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { onAuthStateChanged } from "firebase/auth"
@@ -34,6 +35,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/signIn" element={<SignIn />} />
       <Route path="/signUp" element={<SignUp />} />
+      <Route path="/groupDashboard" element={<GroupDashboard />} />
       <Route element={<ProtectedRoute loading={loading} user={user} />}>
         <Route path="/joinGroup" element={<JoinGroup />} />
         <Route path="/createGroup" element={<CreateGroup />} />
