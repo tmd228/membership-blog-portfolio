@@ -12,9 +12,30 @@
 .leftTop {
     width: 100%;
     height: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .leftBottom {
     width: 100%;
     height: 50%;
+}
+
+.subTitle {
+    color: rgb(75, 75, 75);
+}
+
+.subMenu a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    gap: 0.5rem;
+    padding: 10px;
+}
+
+.subMenu a:hover {
+    background-color: rgb(233, 233, 233);
+    border-radius: 0.5rem;
 }

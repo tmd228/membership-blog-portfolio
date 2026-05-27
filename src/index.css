@@ -9,12 +9,17 @@ body {
   font-size: 16px;
 }
 
+ul {
+  list-style: none;
+}
+
 a {
   text-decoration: none;
+  color: black;
 }
 
 .primaryButton {
-  background-color: rgb(61, 106, 255);
+  background-color: rgb(68, 111, 255);
   padding: 0.75rem 1rem;
   color: white;
   border-radius: 0.25rem;
