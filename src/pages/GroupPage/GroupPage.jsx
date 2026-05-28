@@ -4,6 +4,7 @@ import { useParams, Navigate } from 'react-router-dom'
 import { auth, db } from '../../firebaseConfig/firebase'
 import { addDoc, collection, deleteDoc, doc, documentId, getDoc, getDocs, increment, query, serverTimestamp, updateDoc, where } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
+import { onAuthStateChanged } from 'firebase/auth'
 
 function GroupPage() {
 
@@ -15,11 +16,21 @@ function GroupPage() {
     const [memberList, setMemberList] = useState([])
     const [groupData, setGroupData] = useState(null)
     const [joinRequestList, setJoinRequestList] = useState([])
+    const [user, setUser] = useState(null)
 
+
+    useEffect(() => {
+        const unsub = onAuthStateChanged(auth, setUser)
+        
+        return () => { unsub() }
+    }, [])
 
     useEffect(() => {
         async function fetchMembership() {
             try {
+
+                if (!auth.currentUser) return
+
                 const membershipRef = collection(db, 'membership')
                 const membershipQ = query(
                     membershipRef,
@@ -36,7 +47,7 @@ function GroupPage() {
         }
 
         fetchMembership()
-    }, [groupId])
+    }, [groupId, user])
 
     useEffect(() => {
 

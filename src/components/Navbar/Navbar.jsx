@@ -30,7 +30,7 @@ function Navbar() {
         <h1>Logo</h1>
         <ul>
             <li><Link to='/'>Home</Link></li>
-            <li><Link to='/groupDashboard'>커뮤니티</Link></li>
+            <li><Link to='/community'>커뮤니티</Link></li>
             <li>
             {user ? (
                 // If user is signed in, show user icon or profile link

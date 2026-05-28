@@ -9,11 +9,13 @@ import GroupPage from "./pages/GroupPage/GroupPage"
 import NewGroupPost from "./pages/NewGroupPost/NewGroupPost"
 import GroupPostDetail from "./pages/GroupPostDetail/GroupPostDetail"
 import GroupDashboard from "./pages/GroupDashboard/GroupDashboard"
+import CommunityLeftSidebar from "./components/CommunityLeftSidebar/CommunityLeftSidebar"
 import { Routes, Route } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "./firebaseConfig/firebase"
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute"
+import CommunityLayout from "./pages/CommunityLayout/CommunityLayout"
 
 function App() {
 
@@ -36,10 +38,17 @@ function App() {
       <Route path="/signIn" element={<SignIn />} />
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/groupDashboard" element={<GroupDashboard />} />
+
+      <Route path="/community" element={<CommunityLayout />}>
+        <Route path="dashboard/:groupId" element={<GroupPage />} />
+        <Route path="group/:groupId/post/:postId" element={<GroupPostDetail />} />
+        <Route path="group/:groupId/newPost" element={<NewGroupPost />} />
+      </Route>
+
       <Route element={<ProtectedRoute loading={loading} user={user} />}>
         <Route path="/joinGroup" element={<JoinGroup />} />
         <Route path="/createGroup" element={<CreateGroup />} />
-        <Route path="/group/:groupId" element={<GroupPage />} />
+        {/* <Route path="/group/:groupId" element={<GroupPage />} /> */}
         <Route path="/group/:groupId/newPost" element={<NewGroupPost />} />
         <Route path="/group/:groupId/post/:postId" element={<GroupPostDetail />} />
       </Route>

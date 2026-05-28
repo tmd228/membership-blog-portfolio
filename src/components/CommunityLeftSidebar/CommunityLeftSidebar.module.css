@@ -1,0 +1,59 @@
+.leftSidebar {
+    width: 240px;
+    height: calc(100vh - 4rem);
+    padding: 0.5rem 0.5rem;
+    border-right: 1px solid rgb(236, 236, 236);
+}
+
+.leftTop {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.leftBottom {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.subTitle {
+    color: rgb(75, 75, 75);
+    padding-left: 0.8rem;
+}
+
+.subMenu a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    gap: 0.5rem;
+    padding: 10px;
+}
+
+.subMenu a:hover {
+    background-color: rgb(233, 233, 233);
+    border-radius: 0.5rem;
+}
+
+.groupButton {
+    display: flex;
+    padding: 0.5rem;
+    gap: 0.5rem;
+}
+
+.groupButton:hover {
+        background-color: rgb(233, 233, 233);
+    border-radius: 0.5rem;
+}
+
+.img {
+    width: 1.8rem;
+    height: 1.8rem;
+    background-color: grey;
+    border-radius: 100px;
+}
