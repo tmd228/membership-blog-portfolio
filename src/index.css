@@ -30,3 +30,16 @@ a {
   font-size: 0.9rem;
   text-align: center;
 }
+
+.secondaryButton {
+  background-color: rgba(255, 255, 255, 0);
+  padding: 0.75rem 1rem;
+  color: rgb(68, 111, 255);
+  border: 1px rgb(68, 111, 255) solid;
+  border-radius: 0.25rem;
+  display: inline-block;
+  width: 100%;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-align: center;
+}

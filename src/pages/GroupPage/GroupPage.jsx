@@ -21,7 +21,7 @@ function GroupPage() {
 
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, setUser)
-        
+
         return () => { unsub() }
     }, [])
 
@@ -29,7 +29,7 @@ function GroupPage() {
         async function fetchMembership() {
             try {
 
-                if (!auth.currentUser) return
+                if (!user) return
 
                 const membershipRef = collection(db, 'membership')
                 const membershipQ = query(
@@ -69,7 +69,7 @@ function GroupPage() {
     useEffect(() => {
 
         if (!groupData?.ownerId) return
-        if (groupData.ownerId !== auth.currentUser.uid) return
+        if (groupData.ownerId !== user.uid) return
 
         async function fetchJoinRequest() {
 
@@ -181,42 +181,61 @@ function GroupPage() {
     }
 
     return (
-        <div>
-            <Link className='primaryButton' to={`/group/${groupId}/newPost`}>new Post</Link>
-            <div className={styles.membersList}>
-                <h2>회원 리스트, 회원수: {groupData?.memberCount}</h2>
-                {memberList.map((member) => (
-                    <div key={member.id}>
-                        {member.memberNickname ?? '사용자'}
-                    </div>
-                ))}
-            </div>
-            <div>
-                <h2>가입요청</h2>
-                {joinRequestList.map(doc => {
-                    return <div className={styles.joinRequestCard} key={doc.requestUserId}>
-                        <div className={styles.joinRequestTexts}>
-                            <p>요청자: {doc.requestUserNickname}</p>
-                            <p>요청날짜: {doc.requestedAt?.toDate().toLocaleDateString()}</p>
+        <div className={styles.groupContainer}>
+            <div className={styles.mainContents}>
+                <div className={styles.groupInfo}>
+                    <div className={styles.groupImage}></div>
+                    <div className={styles.groupDetail}>
+                        <div className={styles.titleAndBadge}>
+                            <h2>{groupData?.groupName}</h2>
+                            <p className={styles.badge}>공개그룹</p>
                         </div>
-                        <div className={styles.joinRequestButtons}>
-                            <button onClick={() => handleAcceptJoin(doc)} className={styles.accept}>수락하기</button>
-                            <button className={styles.reject}>거절하기</button>
-                        </div>
+                        <p>{groupData?.description}</p>
                     </div>
-                })}
+                    <div className={styles.groupButtons}>
+                        <p className='primaryButton'>버튼일번</p>
+                        <p className='secondaryButton'>버튼이번</p>
+                    </div>
+                </div>
             </div>
-            <div className={styles.postsList}>
-                <h2>게시글</h2>
-                {posts.length > 0 ? posts.map((post) => {
-                    return <Link key={post.id} to={`/group/${groupId}/post/${post.id}`}>
-                        <p>{post.title}</p>
-                        <p>{post.nickname ?? '사용자'}</p>
-                    </Link>
-                })
-                    : <p>게시물이 없습니다</p>}
-            </div>
+            <div className={styles.rightSidebar}>오른쪽</div>
         </div>
+        // <div>
+        //     <Link className='primaryButton' to={`/group/${groupId}/newPost`}>new Post</Link>
+        //     <div className={styles.membersList}>
+        //         <h2>회원 리스트, 회원수: {groupData?.memberCount}</h2>
+        //         {memberList.map((member) => (
+        //             <div key={member.id}>
+        //                 {member.memberNickname ?? '사용자'}
+        //             </div>
+        //         ))}
+        //     </div>
+        //     <div>
+        //         <h2>가입요청</h2>
+        //         {joinRequestList.map(doc => {
+        //             return <div className={styles.joinRequestCard} key={doc.requestUserId}>
+        //                 <div className={styles.joinRequestTexts}>
+        //                     <p>요청자: {doc.requestUserNickname}</p>
+        //                     <p>요청날짜: {doc.requestedAt?.toDate().toLocaleDateString()}</p>
+        //                 </div>
+        //                 <div className={styles.joinRequestButtons}>
+        //                     <button onClick={() => handleAcceptJoin(doc)} className={styles.accept}>수락하기</button>
+        //                     <button className={styles.reject}>거절하기</button>
+        //                 </div>
+        //             </div>
+        //         })}
+        //     </div>
+        //     <div className={styles.postsList}>
+        //         <h2>게시글</h2>
+        //         {posts.length > 0 ? posts.map((post) => {
+        //             return <Link key={post.id} to={`/group/${groupId}/post/${post.id}`}>
+        //                 <p>{post.title}</p>
+        //                 <p>{post.nickname ?? '사용자'}</p>
+        //             </Link>
+        //         })
+        //             : <p>게시물이 없습니다</p>}
+        //     </div>
+        // </div>
     )
 }
 
