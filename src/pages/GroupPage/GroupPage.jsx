@@ -193,13 +193,38 @@ function GroupPage() {
                         </div>
                         <p className={styles.groupDescription}>{groupData?.description}</p>
                         <div className={styles.infoBadges}>
-                            <p className={styles.infoBadge}><UserIcon size={12}/>멤버 {groupData.memberCount}명</p>
+                            <p className={styles.infoBadge}><UserIcon size={12} />멤버 {groupData.memberCount}명</p>
                         </div>
                     </div>
                     <div className={styles.groupButtons}>
-                        <p className='primaryButton'>버튼일번</p>
                         <p className='secondaryButton'>버튼이번</p>
+                        <Link to={`/group/${groupId}/newPost`} className='primaryButton'>버튼일번</Link>
                     </div>
+                </div>
+                <div className={styles.membersAndPosts}>
+                    {/* 멤버목록 */}
+                    <div className={`${styles.groupMembersList} ${styles.dashboardCards}`}>
+                        멤버목록
+                        {memberList?.map((member) => (
+                            <div key={member.id} className={styles.userListUser}>
+                                <div className={styles.userProfilePicture}></div>
+                                <p>{member.memberNickname ?? '사용자'}</p>
+                            </div>
+                        ))}
+                    </div>
+                    {/* /멤버목록 */}
+                    <div className={styles.announcementAndPosts}>
+                        <div className={`${styles.dashboardCards}`}>
+                            공지사항
+                        </div>
+                        {/* 게시글목록 */}
+                        <div className={`${styles.groupPostsList} ${styles.dashboardCards}`}>
+                            게시글목록
+                        </div>
+                        {/* /게시글목록 */}
+
+                    </div>
+
                 </div>
             </div>
             <div className={styles.rightSidebar}>오른쪽</div>

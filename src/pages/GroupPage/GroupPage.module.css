@@ -47,6 +47,9 @@
     width: 100%;
     height: calc(100vh - 4rem);
     padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .rightSidebar {
@@ -120,4 +123,52 @@
     flex-direction: column;
     gap: 0.5rem;
     justify-content: center;
+}
+
+.dashboardCards {
+    display: flex;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    padding: 1rem;
+    gap: 1.2rem;
+    background-color: white;
+    border: 1px solid rgb(228, 228, 228);
+}
+
+.groupMembersList {
+    width: 300px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+}
+.userListUser {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.userProfilePicture {
+    width: 30px;
+    height: 30px;
+    background-color: grey;
+    border-radius: 30px;
+}
+
+
+
+.membersAndPosts {
+    display: flex;
+    gap: 1rem;
+}
+
+.announcementAndPosts {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+.groupPostsList {
+    height: fit-content;
 }

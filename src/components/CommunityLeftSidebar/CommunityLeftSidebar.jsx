@@ -47,10 +47,10 @@ function CommunityLeftSidebar() {
           <p className={styles.subTitle}>내 그룹</p>
           <ul>
           {userGroups?.map((group) => {
-            return <div className={styles.groupButton} key={group.groupId}>
+            return <Link to={`/community/dashboard/${group.groupId}`} className={styles.groupButton} key={group.groupId}>
                 <div className={styles.img}></div>
-              <Link to={`/community/dashboard/${group.groupId}`}>{group.groupName}</Link>
-            </div>
+              <div>{group.groupName}</div>
+            </Link>
           })}
 
           </ul>
