@@ -5,6 +5,7 @@ import { auth, db } from '../../firebaseConfig/firebase'
 import { addDoc, collection, deleteDoc, doc, documentId, getDoc, getDocs, increment, query, serverTimestamp, updateDoc, where } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth'
+import { Users as UserIcon } from 'lucide-react';
 
 function GroupPage() {
 
@@ -190,7 +191,10 @@ function GroupPage() {
                             <h2>{groupData?.groupName}</h2>
                             <p className={styles.badge}>공개그룹</p>
                         </div>
-                        <p>{groupData?.description}</p>
+                        <p className={styles.groupDescription}>{groupData?.description}</p>
+                        <div className={styles.infoBadges}>
+                            <p className={styles.infoBadge}><UserIcon size={12}/>멤버 {groupData.memberCount}명</p>
+                        </div>
                     </div>
                     <div className={styles.groupButtons}>
                         <p className='primaryButton'>버튼일번</p>
