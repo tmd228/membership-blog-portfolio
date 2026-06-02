@@ -53,15 +53,14 @@
 }
 
 .rightSidebar {
-    width: 600px;
-    background-color: blue;
+    width: 400px;
+    padding: 0.5rem;
 }
 
 .groupInfo {
     display: flex;
     width: 100%;
     height: auto;
-    border-radius: 14px;
     padding: 1rem;
     gap: 1.2rem;
     background-color: white;
@@ -127,9 +126,8 @@
 
 .dashboardCards {
     display: flex;
-    width: 100%;
     height: auto;
-    border-radius: 14px;
+    border-radius: 0.5rem;
     padding: 1rem;
     gap: 1.2rem;
     background-color: white;
@@ -137,10 +135,11 @@
 }
 
 .groupMembersList {
-    width: 300px;
+    width: 240px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 .userListUser {
     display: flex;
@@ -156,10 +155,10 @@
 }
 
 
-
 .membersAndPosts {
     display: flex;
     gap: 1rem;
+    height: 100%;
 }
 
 .announcementAndPosts {
@@ -171,4 +170,41 @@
 
 .groupPostsList {
     height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.postItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border: 1px solid rgb(238, 238, 238);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.postDate {
+    color: rgb(135, 135, 135);
+    font-size: 1rem;
+}
+
+.userAndBookmark {
+    display: flex;
+    justify-content: space-between;
+}
+
+.languageAndViewCount {
+    display: flex;
+    justify-content: space-between;
+}
+
+.viewCount {
+    display: flex;
+    align-items: center;
+    color: grey;
+    gap: 0.1rem;
+}
+
+.statistic {
+    height: 400px;
 }

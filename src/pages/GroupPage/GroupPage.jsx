@@ -6,6 +6,12 @@ import { addDoc, collection, deleteDoc, doc, documentId, getDoc, getDocs, increm
 import { Link } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth'
 import { Users as UserIcon } from 'lucide-react';
+import {
+    Bookmark as BookmarkIcon,
+    Eye as EyeIcon
+} from 'lucide-react'
+import PostsList from './PostsList'
+import GroupInfo from './GroupInfo'
 
 function GroupPage() {
 
@@ -184,23 +190,7 @@ function GroupPage() {
     return (
         <div className={styles.groupContainer}>
             <div className={styles.mainContents}>
-                <div className={styles.groupInfo}>
-                    <div className={styles.groupImage}></div>
-                    <div className={styles.groupDetail}>
-                        <div className={styles.titleAndBadge}>
-                            <h2>{groupData?.groupName}</h2>
-                            <p className={styles.badge}>공개그룹</p>
-                        </div>
-                        <p className={styles.groupDescription}>{groupData?.description}</p>
-                        <div className={styles.infoBadges}>
-                            <p className={styles.infoBadge}><UserIcon size={12} />멤버 {groupData.memberCount}명</p>
-                        </div>
-                    </div>
-                    <div className={styles.groupButtons}>
-                        <p className='secondaryButton'>버튼이번</p>
-                        <Link to={`/group/${groupId}/newPost`} className='primaryButton'>버튼일번</Link>
-                    </div>
-                </div>
+                <GroupInfo groupData={groupData} groupId={groupId} />
                 <div className={styles.membersAndPosts}>
                     {/* 멤버목록 */}
                     <div className={`${styles.groupMembersList} ${styles.dashboardCards}`}>
@@ -218,16 +208,15 @@ function GroupPage() {
                             공지사항
                         </div>
                         {/* 게시글목록 */}
-                        <div className={`${styles.groupPostsList} ${styles.dashboardCards}`}>
-                            게시글목록
-                        </div>
+                        <PostsList postsData={posts} />
                         {/* /게시글목록 */}
-
                     </div>
-
                 </div>
             </div>
-            <div className={styles.rightSidebar}>오른쪽</div>
+            <div className={styles.rightSidebar}>
+                <div className={`${styles.statistic} ${styles.dashboardCards}`}>
+                </div>
+            </div>
         </div>
         // <div>
         //     <Link className='primaryButton' to={`/group/${groupId}/newPost`}>new Post</Link>
